@@ -1,0 +1,8 @@
+# Copyright (c) Ontic. (http://www.ontic.com.au). All rights reserved.
+# See the COPYING file bundled with this package for license details.
+
+---
+
+kong_url: 'https://kong.bintray.com/kong-community-edition-rpm/centos/{{ ansible_distribution_major_version }}/kong-community-edition-{{ kong_version }}.el7.noarch.rpm'
+kong_dependencies:
+  - 'epel-release'

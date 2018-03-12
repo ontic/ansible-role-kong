@@ -1,0 +1,27 @@
+# Copyright (c) Ontic. (http://www.ontic.com.au). All rights reserved.
+# See the COPYING file bundled with this package for license details.
+
+---
+
+- name: 'Kong | Include OS-specific variables.'
+  include_vars: '{{ ansible_os_family }}.yml'
+  tags:
+    - 'kong'
+    - 'kong-package'
+    - 'kong-configure'
+    - 'kong-service'
+    - 'package'
+    - 'configure'
+    - 'service'
+
+- include_tasks: 'package.yml'
+  tags:
+    - 'kong'
+    - 'kong-package'
+    - 'package'
+
+- include_tasks: 'configure.yml'
+  tags:
+    - 'kong'
+    - 'kong-configure'
+    - 'configure'

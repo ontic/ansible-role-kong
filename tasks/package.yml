@@ -1,0 +1,25 @@
+# Copyright (c) Ontic. (http://www.ontic.com.au). All rights reserved.
+# See the COPYING file bundled with this package for license details.
+
+---
+
+- name: 'Kong | Install dependencies.'
+  become: yes
+  package:
+    name: '{{ item }}'
+    state: 'present'
+  with_items: '{{ kong_dependencies }}'
+
+- name: 'Kong | Debian | Install Kong.'
+  become: yes
+  apt:
+    deb: '{{ kong_url }}'
+    state: '{{ kong_state }}'
+  when: 'ansible_os_family == "Debian"'
+
+- name: 'Kong | RedHat | Install Kong.'
+  become: yes
+  yum:
+    name: '{{ kong_url }}'
+    state: '{{ kong_state }}'
+  when: 'ansible_os_family == "RedHat"'
