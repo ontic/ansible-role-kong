@@ -38,6 +38,7 @@
     - 'check kong'
     - 'restart kong'
   with_items: '{{ kong_config }}'
+  when: 'kong_config | default(None) != None'
 
 - name: 'Kong | Configure custom Nginx config file.'
   become: yes
