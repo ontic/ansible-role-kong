@@ -1,0 +1,7 @@
+# Copyright (c) Ontic. (http://www.ontic.com.au). All rights reserved.
+# See the COPYING file bundled with this package for license details.
+
+---
+
+- src: 'ontic.account'
+- src: 'ontic.postgresql'

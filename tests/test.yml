@@ -4,5 +4,49 @@
 ---
 
 - hosts: 'localhost'
+  vars:
+    account_username: 'web'
+    account_password: 'secret'
+    account_password_hash: '{{ account_password | password_hash("sha512", "kong") }}'
+    account_password_md5: 'md5{{ (account_password + "web") | hash("md5") }}'
+    account_root: '/home/{{ account_username }}'
+    account_group: 'web'
+    account_groups:
+      - name: '{{ account_group }}'
+    account_users:
+      - name: '{{ account_username }}'
+        group: '{{ account_group }}'
+        password: '{{ account_password_hash }}'
+    postgresql_authentication:
+      - { type: 'local', database: 'all', user: 'postgres', auth_method: 'peer' }
+      - { type: 'local', database: 'all', user: 'all', auth_method: 'peer' }
+      - { type: 'host', database: 'all', user: 'all', address: '127.0.0.1/32', auth_method: 'md5' }
+      - { type: 'host', database: 'all', user: 'all', address: '::1/128', auth_method: 'md5' }
+    postgresql_global_config:
+      - { option: 'listen_addresses', value: 'localhost' }
+      - { option: 'password_encryption', value: 'md5' }
+    postgresql_users:
+      - name: 'web'
+        password: '{{ account_password_md5 }}'
+    postgresql_databases:
+      - name: 'kong'
+    postgresql_schemas:
+    postgresql_privileges:
+      - database: 'kong'
+        type: 'schema'
+        roles: 'web'
+        privs: 'ALL'
+        objs: 'public'
+    kong_config:
+      - { option: 'database', value: 'postgres' }
+      - { option: 'pg_host', value: 'localhost' }
+      - { option: 'pg_port', value: '5432' }
+      - { option: 'pg_user', value: 'web' }
+      - { option: 'pg_password', value: '{{ account_password }}' }
+      - { option: 'pg_database', value: 'kong' }
+      - { option: 'pg_ssl', value: 'off' }
+      - { option: 'pg_ssl_verify', value: 'off' }
   roles:
+    - { role: 'ontic.account' }
+    - { role: 'ontic.postgresql' }
     - { role: 'role_under_test' }
