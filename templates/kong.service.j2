@@ -1,0 +1,19 @@
+[Unit]
+Description=Kong API Gateway
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+User=root
+Group=root
+LimitAS=infinity
+LimitRSS=infinity
+LimitCORE=infinity
+LimitNOFILE=4096
+PIDFile={{ kong_nginx_pid_file }}
+ExecStart={{ kong_binary_file }} start --conf {{ kong_config_file }} --nginx-conf {{ kong_nginx_config_file }}
+ExecReload={{ kong_binary_file }} reload --conf {{ kong_config_file }} --nginx-conf {{ kong_nginx_config_file }}
+ExecStop={{ kong_binary_file }} stop --conf {{ kong_config_file }}
+
+[Install]
+WantedBy=multi-user.target

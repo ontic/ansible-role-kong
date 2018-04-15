@@ -14,6 +14,20 @@
     - 'configure'
     - 'service'
 
+- name: 'Kong | Define whether Kong is prepared.'
+  become: yes
+  stat:
+    path: '{{ kong_prefix_path }}'
+  register: 'kong_prepared'
+  tags:
+    - 'kong'
+    - 'kong-package'
+    - 'kong-configure'
+    - 'kong-service'
+    - 'package'
+    - 'configure'
+    - 'service'
+
 - include_tasks: 'package.yml'
   tags:
     - 'kong'
@@ -25,3 +39,9 @@
     - 'kong'
     - 'kong-configure'
     - 'configure'
+
+- include_tasks: 'service.yml'
+  tags:
+    - 'kong'
+    - 'kong-service'
+    - 'service'

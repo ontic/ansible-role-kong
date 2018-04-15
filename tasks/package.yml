@@ -14,12 +14,15 @@
   become: yes
   apt:
     deb: '{{ kong_url }}'
-    state: '{{ kong_state }}'
+    state: 'present'
+    force: yes
+  register: 'kong_installed'
   when: 'ansible_os_family == "Debian"'
 
 - name: 'Kong | RedHat | Install Kong.'
   become: yes
   yum:
     name: '{{ kong_url }}'
-    state: '{{ kong_state }}'
+    state: 'present'
+  register: 'kong_installed'
   when: 'ansible_os_family == "RedHat"'

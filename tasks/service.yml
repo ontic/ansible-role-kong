@@ -1,0 +1,11 @@
+# Copyright (c) Ontic. (http://www.ontic.com.au). All rights reserved.
+# See the COPYING file bundled with this package for license details.
+
+---
+
+- name: 'Kong | Enable Kong service.'
+  become: yes
+  service:
+    name: '{{ kong_service_name }}'
+    state: '{{ kong_service_state }}'
+    enabled: '{{ kong_service_enabled }}'

@@ -1,0 +1,30 @@
+# Copyright (c) Ontic. (http://www.ontic.com.au). All rights reserved.
+# See the COPYING file bundled with this package for license details.
+
+---
+
+- name: 'reload systemd'
+  become: yes
+  command: 'systemctl daemon-reload'
+
+- name: 'check kong'
+  become: yes
+  command: '{{ kong_binary_file }} check {{ kong_config_file }}'
+
+- name: 'start kong'
+  become: yes
+  service:
+    name: '{{ kong_service_name }}'
+    state: 'started'
+
+- name: 'stop kong'
+  become: yes
+  service:
+    name: '{{ kong_service_name }}'
+    state: 'stopped'
+
+- name: 'restart kong'
+  become: yes
+  service:
+    name: '{{ kong_service_name }}'
+    state: 'restarted'

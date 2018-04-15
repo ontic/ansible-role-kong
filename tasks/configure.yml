@@ -3,3 +3,82 @@
 
 ---
 
+- name: 'Kong | Configure service init file.'
+  become: yes
+  template:
+    src: '{{ kong_service_template }}'
+    dest: '/etc/systemd/system/kong.service'
+    owner: 'root'
+    group: 'root'
+    mode: '0655'
+  notify: 'reload systemd'
+
+- name: 'Kong | Create or refresh the config file.'
+  become: yes
+  template:
+    src: '{{ kong_config_template }}'
+    dest: '{{ kong_config_file }}'
+    force: '{{ kong_config_file_refresh or not kong_prepared.stat.exists }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+
+- name: 'Kong | Configure properties in config file.'
+  become: yes
+  ini_file:
+    dest: '{{ kong_config_file }}'
+    section:
+    option: '{{ item.option }}'
+    value: '{{ item.value | default(omit) }}'
+    state: '{{ item.state | default(omit) }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'check kong'
+    - 'restart kong'
+  with_items: '{{ kong_config }}'
+
+- name: 'Kong | Configure custom Nginx config file.'
+  become: yes
+  template:
+    src: '{{ kong_nginx_config_template }}'
+    dest: '{{ kong_nginx_config_file }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: 'restart kong'
+
+- name: 'Kong | Prepare the prefix directory.'
+  become: yes
+  command: '{{ kong_binary_file }} prepare --prefix {{ kong_prefix_path }} --conf {{ kong_config_file }}'
+  args:
+      creates: '{{ kong_prefix_path }}'
+  when: 'not kong_prepared.stat.exists'
+
+- name: 'Kong | Determine the health status.'
+  become: yes
+  command: '{{ kong_binary_file }} health --prefix {{ kong_prefix_path }}'
+  failed_when: false
+  changed_when: false
+  register: 'kong_health'
+
+- name: 'Kong | Define whether Kong is running.'
+  set_fact:
+    kong_is_running: '{{ kong_health.stderr.find("Kong is not running") == -1 }}'
+
+- name: 'Kong | Define whether migrations are required.'
+  set_fact:
+    kong_migrations_required: '{{ not kong_prepared.stat.exists or kong_installed.changed or kong_run_migrations | bool }}'
+
+- name: 'Kong | Stop Kong before running migrations.'
+  become: yes
+  service:
+    name: '{{ kong_service_name and kong_migrations_required }}'
+    state: 'stopped'
+  when: 'kong_is_running and kong_migrations_required'
+
+- name: 'Kong | Run migrations.'
+  become: yes
+  command: '{{ kong_binary_file }} migrations up --conf {{ kong_config_file }}'
+  when: 'not kong_is_running and kong_migrations_required'
