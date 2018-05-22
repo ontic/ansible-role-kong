@@ -28,19 +28,19 @@
     - 'configure'
     - 'service'
 
-- include_tasks: 'package.yml'
+- import_tasks: 'package.yml'
   tags:
     - 'kong'
     - 'kong-package'
     - 'package'
 
-- include_tasks: 'configure.yml'
+- import_tasks: 'configure.yml'
   tags:
     - 'kong'
     - 'kong-configure'
     - 'configure'
 
-- include_tasks: 'service.yml'
+- import_tasks: 'service.yml'
   tags:
     - 'kong'
     - 'kong-service'
