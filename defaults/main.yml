@@ -3,7 +3,7 @@
 
 ---
 
-kong_version: '0.13.0'
+kong_version: '0.13.1'
 
 kong_bin_path: '/usr/local/bin'
 kong_config_path: '/etc/kong'

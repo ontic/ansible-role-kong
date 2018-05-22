@@ -1,0 +1,12 @@
+# Copyright (c) Ontic. (http://www.ontic.com.au). All rights reserved.
+# See the COPYING file bundled with this package for license details.
+
+---
+
+kong_url: 'https://kong.bintray.com/kong-community-edition-deb/dists/kong-community-edition-{{ kong_version }}.zesty.all.deb'
+kong_dependencies:
+  - 'apt-transport-https'
+  - 'openssl'
+  - 'libpcre3'
+  - 'procps'
+  - 'perl'
