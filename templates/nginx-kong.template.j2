@@ -6,6 +6,7 @@ user {{ '${{' }}NGINX_USER}};
 
 worker_processes {{ '${{' }}NGINX_WORKER_PROCESSES}};
 daemon {{ '${{' }}NGINX_DAEMON}};
+
 pid {{ kong_nginx_pid_file }};
 error_log {{ '${{' }}PROXY_ERROR_LOG}} {{ '${{' }}LOG_LEVEL}};
 

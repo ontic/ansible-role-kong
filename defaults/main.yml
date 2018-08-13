@@ -3,7 +3,7 @@
 
 ---
 
-kong_version: '0.13.1'
+kong_version: '0.14.0'
 
 kong_bin_path: '/usr/local/bin'
 kong_config_path: '/etc/kong'
@@ -17,6 +17,7 @@ kong_service_template: 'kong.service.j2'
 
 kong_run_migrations: no
 kong_binary_file: '{{ kong_bin_path }}/kong'
+kong_database_service: 'postgresql.service'
 
 kong_config:
 kong_config_file: '{{ kong_config_path }}/kong.conf'

@@ -33,13 +33,19 @@ options:
       - create
       - delete
       - find
-      - list
       - routes
+      - plugins
+      - list
     description:
       - An action to perform. If `create` a service will be created or updated. If `delete` a
         service will be removed. If `find` the response will contain service information. If `list`
         the response will contain a collection of services and all their information. If `routes` the
-        response will contain a collection of routes and all their information.
+        response will contain a collection of routes and all their information. If `plugins` the
+        response will contain a collection of plugins and all their information.
+  id:
+    required: false
+    description:
+      - A unique name or UUID used as the service primary key.
   name:
     required: false
     description:
@@ -106,18 +112,41 @@ options:
 EXAMPLES = '''
 - name: Create a service
   kong_service:
+    id: example-service
     name: example-service
-    host: example.com
+    url: http://mockbin.org/request
     action: create
+  register: service_create
+
+- name: Debug service create
+  debug: var=service_create
 
 - name: Find a service
   kong_service:
-    name: example-service
+    id: example-service
     action: find
   register: service_find
 
 - name: Debug service find
   debug: var=service_find
+
+- name: List all service routes
+  kong_service:
+    id: example-service
+    action: routes
+  register: service_routes
+
+- name: Debug service routes
+  debug: var=service_routes
+
+- name: List all service plugins
+  kong_service:
+    id: example-service
+    action: plugins
+  register: service_plugins
+
+- name: Debug service plugins
+  debug: var=service_plugins
 
 - name: List all services
   kong_service:
@@ -127,19 +156,14 @@ EXAMPLES = '''
 - name: Debug service list
   debug: var=service_list
 
-- name: List all service routes
-  kong_service:
-    name: example-service
-    action: routes
-  register: service_routes
-
-- name: Debug service routes
-  debug: var=service_routes
-
 - name: Delete a service
   kong_service:
-    name: example-service
+    id: example-service
     action: delete
+  register: service_delete
+
+- name: Debug service delete
+  debug: var=service_delete
 '''
 
 RETURN = '''
@@ -174,7 +198,8 @@ def main():
         'admin_url': dict(required=False, default='http://localhost:8001', type='str'),
         'url_username': dict(required=False, default=None, type='str', aliases=['admin_username']),
         'url_password': dict(required=False, default=None, type='str', aliases=['admin_password'], no_log=True),
-        'action': dict(required=True, default=None, type='str', choices=['create', 'delete', 'find', 'list', 'routes']),
+        'action': dict(required=True, default=None, type='str', choices=['create', 'delete', 'find', 'routes', 'plugins', 'list']),
+        'id': dict(required=False, default=None, type='str', include=True, uuid=True),
         'name': dict(required=False, default=None, type='str', include=True),
         'retries': dict(required=False, default=None, type='int', include=True),
         'connect_timeout': dict(required=False, default=None, type='int', include=True),
@@ -187,6 +212,7 @@ def main():
         'url': dict(required=False, default=None, type='str', include=True),
         'size': dict(required=False, default=None, type='int', include=True),
         'offset': dict(required=False, default=None, type='int', include=True),
+        'created_at': dict(required=False, default=None, type='int', include=False),
         'updated_at': dict(required=False, default=None, type='int', include=False)
     }
 
@@ -194,24 +220,29 @@ def main():
     argument_spec.update(module_spec)
 
     module = AnsibleModule(
-        argument_spec=argument_spec,
-        check_invalid_arguments=False
+        argument_spec=argument_spec
     )
 
     api = KongServiceApi(module)
 
-    if api.action == 'create':
-        result = api.create()
-    elif api.action == 'delete':
-        result = api.delete()
-    elif api.action == 'routes':
-        result = api.routes()
-    elif api.action == 'find':
-        result = api.find()
-    elif api.action == 'list':
-        result = api.list()
-    elif api.action == 'routes':
-        result = api.routes()
+    try:
+        if api.action == 'create':
+            result = api.required('id').create()
+        elif api.action == 'delete':
+            result = api.required('id').delete()
+        elif api.action == 'find':
+            result = api.required('id').find()
+        elif api.action == 'routes':
+            result = api.required('id').routes()
+        elif api.action == 'plugins':
+            result = api.required('id').plugins()
+        elif api.action == 'list':
+            result = api.list()
+    except ValueError, error:
+        result = {
+            'message': str(error),
+            'failed': True
+        }
 
     module.exit_json(**result)
 

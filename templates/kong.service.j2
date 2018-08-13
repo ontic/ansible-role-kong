@@ -1,6 +1,6 @@
 [Unit]
 Description=Kong API Gateway
-After=syslog.target network.target remote-fs.target nss-lookup.target
+After=syslog.target network.target remote-fs.target nss-lookup.target {{ kong_database_service }}
 
 [Service]
 Type=forking

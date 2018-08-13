@@ -32,6 +32,12 @@
     - 'configure'
     - 'service'
 
+#- import_tasks: 'test_service.yml'
+#  tags:
+#    - 'kong'
+#    - 'kong-test'
+#    - 'test'
+
 - import_tasks: 'package.yml'
   tags:
     - 'kong'

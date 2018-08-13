@@ -94,16 +94,21 @@ def main():
     argument_spec.update(module_spec)
 
     module = AnsibleModule(
-        argument_spec=argument_spec,
-        check_invalid_arguments=False
+        argument_spec=argument_spec
     )
 
     api = KongNodeApi(module)
 
-    if api.action == 'status':
-        result = api.status()
-    elif api.action == 'information':
-        result = api.information()
+    try:
+        if api.action == 'status':
+            result = api.status()
+        elif api.action == 'information':
+            result = api.information()
+    except ValueError, error:
+        result = {
+            'message': str(error),
+            'failed': True
+        }
 
     module.exit_json(**result)
 

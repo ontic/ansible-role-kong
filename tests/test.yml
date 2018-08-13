@@ -46,6 +46,31 @@
       - { option: 'pg_database', value: 'kong' }
       - { option: 'pg_ssl', value: 'off' }
       - { option: 'pg_ssl_verify', value: 'off' }
+  tasks:
+    - name: 'Create a service'
+      kong_service:
+        id: 'example-service'
+        name: 'example-service'
+        url: 'http://mockbin.org/request'
+        action: 'create'
+    - name: 'Create a route'
+      kong_route:
+        id: 'example-route'
+        service: 'example-service'
+        hosts: 'example.com'
+        action: 'create'
+    - name: 'Create a consumer'
+      kong_consumer:
+        id: 'example-consumer'
+        username: 'adam'
+        custom_id: '1234'
+        action: 'create'
+    - name: 'Create a plugin'
+      kong_plugin:
+        id: 'example-plugin'
+        name: 'key-auth'
+        enabled: true
+        action: 'create'
   roles:
     - { role: 'ontic.account' }
     - { role: 'ontic.postgresql' }
