@@ -47,6 +47,10 @@
       - { option: 'pg_ssl', value: 'off' }
       - { option: 'pg_ssl_verify', value: 'off' }
   tasks:
+    - name: 'Install Curl'
+      package:
+        name: 'curl'
+        state: 'present'
     - name: 'Create a service'
       kong_service:
         id: 'example-service'
