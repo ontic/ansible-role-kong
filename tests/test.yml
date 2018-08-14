@@ -85,8 +85,8 @@
     - name: 'Create an API key'
       uri:
         url: 'http://localhost:8001/consumers/adam/key-auth'
-        method: 'PUT'
-        status_code: 200, 201
+        method: 'POST'
+        status_code: 201, 409
         body_format: 'json'
         body:
           key: 'SECRET_KEY'
