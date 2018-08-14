@@ -90,6 +90,8 @@
         body_format: 'json'
         body:
           key: 'SECRET_KEY'
+      register: 'response'
+      changed_when: 'response.status == 201'
     - name: 'Ensure API key can be authenticated'
       uri:
         url: 'http://localhost:8000'
