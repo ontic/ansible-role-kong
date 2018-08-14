@@ -75,6 +75,29 @@
         name: 'key-auth'
         enabled: true
         action: 'create'
+    - name: 'Ensure all endpoints are secured'
+      uri:
+        url: 'http://localhost:8000'
+        method: 'GET'
+        headers:
+          Host: 'example.com'
+        status_code: 401
+    - name: 'Create an API key'
+      uri:
+        url: 'http://localhost:8001/consumers/adam/key-auth'
+        method: 'POST'
+        status_code: 201
+        body_format: 'json'
+        body:
+          key: 'SECRET_KEY'
+    - name: 'Ensure API key can be authenticated'
+      uri:
+        url: 'http://localhost:8000'
+        method: 'GET'
+        headers:
+          Host: 'example.com'
+          apikey: 'SECRET_KEY'
+        status_code: 200
   roles:
     - { role: 'ontic.account' }
     - { role: 'ontic.postgresql' }
