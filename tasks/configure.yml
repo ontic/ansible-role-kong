@@ -10,7 +10,7 @@
     state: directory
     owner: 'root'
     group: 'root'
-    mode: 0755
+    mode: '0755'
   when: "kong_log_path != kong_prefix_path + '/logs'"
 
 - name: 'Kong | Configure service init file.'
