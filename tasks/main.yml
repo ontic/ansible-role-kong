@@ -32,11 +32,18 @@
     - 'configure'
     - 'service'
 
-#- import_tasks: 'test_service.yml'
-#  tags:
-#    - 'kong'
-#    - 'kong-test'
-#    - 'test'
+- name: 'Kong | Define log path.'
+  set_fact:
+    kong_log_path: '{{ kong_default_log_path }}'
+  when: 'kong_log_path is not defined'
+  tags:
+    - 'kong'
+    - 'kong-package'
+    - 'kong-configure'
+    - 'kong-service'
+    - 'package'
+    - 'configure'
+    - 'service'
 
 - import_tasks: 'package.yml'
   tags:

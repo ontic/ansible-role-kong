@@ -75,6 +75,7 @@ Below lists all individuals having contributed to the repository. If you would l
 you to do so by making a [pull](../../pulls) request or submitting an [issue](../../issues).
 
 * [Adam Dyson](https://github.com/adamdyson)
+* [Eric Olsen](https://github.com/eoly)
 
 ## License
 
