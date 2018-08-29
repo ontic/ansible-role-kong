@@ -4,7 +4,7 @@
 ---
 
 kong_url: 'https://kong.bintray.com/kong-community-edition-deb/dists/kong-community-edition-{{ kong_version }}.zesty.all.deb'
-kong_default_log_path: '{{ kong_prefix_path + "/logs" }}'
+kong_default_log_path: '{{ kong_prefix_path | regex_replace("\\/$", "") + "/logs" }}'
 kong_dependencies:
   - 'apt-transport-https'
   - 'openssl'
