@@ -171,7 +171,7 @@ def main():
         'admin_url': dict(required=False, default='http://localhost:8001', type='str'),
         'url_username': dict(required=False, default=None, type='str', aliases=['admin_username']),
         'url_password': dict(required=False, default=None, type='str', aliases=['admin_password'], no_log=True),
-        'action': dict(required=True, default=None, type='str', choices=['create', 'delete', 'find', 'list']),
+        'action': dict(required=True, default=None, type='str', choices=['create', 'delete', 'find', 'health', 'list']),
         'id': dict(required=False, default=None, type='str', include=True, uuid=True),
         'name': dict(required=False, default=None, type='str', include=True),
         'slots': dict(required=False, default=None, type='int', include=True),

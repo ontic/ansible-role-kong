@@ -80,6 +80,21 @@
         id: 'example-upstream'
         name: 'api.localhost.com'
         action: 'create'
+    - name: 'Create a target'
+      kong_target:
+        target: '127.0.0.1:9080'
+        weight: 15
+        upstream: 'example-upstream'
+        action: 'create'
+    - name: 'Find a target'
+      kong_target:
+        target: '127.0.0.1:9080'
+        upstream: 'example-upstream'
+        action: 'find'
+      register: 'target_find'
+    - name: 'Debug target find'
+      debug:
+        var: 'target_find'
     - name: 'Ensure all endpoints are secured'
       uri:
         url: 'http://localhost:8000'

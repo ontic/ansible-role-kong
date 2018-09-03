@@ -267,3 +267,62 @@ class KongUpstreamApi(KongApi):
 
     def list(self):
         return self.request_read('/upstreams')
+
+class KongTargetApi(KongApi):
+
+    def create(self):
+        # We cannot use our typical request_create function as not all
+        # API end-points have been updated in Kong to support the PUT method.
+        # This is probably one of the oddest API endpoints getting around.
+        exists = self.find()
+
+        if exists['status'] == 200:
+            result = exists
+        else:
+            result = self.request('/upstreams/{upstream_id}/targets', 'POST', self.data)
+            result['changed'] = result['status'] == 201
+            result['failed'] = result['status'] >= 400
+
+        return result
+
+    def delete(self):
+        return self.request_delete('/upstreams/{upstream_id}/targets/{target}')
+
+    def find(self):
+        result = {
+            'message': '404 Not Found',
+            'status': 404,
+            'url': self.url('/upstreams/{upstream_id}/targets'),
+            'response': {},
+            'changed': False,
+            'failed': True,
+        }
+
+        targets = self.request('/upstreams/{upstream_id}/targets', 'GET', self.data)
+
+        if targets['status'] == 200:
+            for data in targets['response']['data']:
+                if data['target'] == self.data['target']:
+                    result['failed'] = False
+                    result['status'] = 200
+                    result['response'] = data
+                    break
+
+        return result
+
+    def healthy(self):
+        result = self.request('/upstreams/{upstream_id}/targets/{target}/healthy', 'POST', self.data)
+        result['changed'] = result['status'] == 204
+        result['failed'] = result['status'] >= 400
+
+        return result
+
+    def unhealthy(self):
+        result = self.request('/upstreams/{upstream_id}/targets/{target}/unhealthy', 'POST', self.data)
+        result['changed'] = result['status'] == 204
+        result['failed'] = result['status'] >= 400
+
+        return result
+
+    def list(self):
+        return self.request_read('/upstreams/{upstream_id}/targets/all')
