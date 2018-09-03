@@ -184,7 +184,7 @@ def main():
         argument_spec=argument_spec
     )
 
-    api = KongServiceApi(module)
+    api = KongUpstreamApi(module)
 
     try:
         if api.action == 'create':
