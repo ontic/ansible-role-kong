@@ -95,6 +95,7 @@ EXAMPLES = '''
   kong_upstream:
     id: example-upstream
     name: api.localhost.com
+    created_at: '2018-08-13 15:44:11+00'
     action: create
   register: upstream_create
 
