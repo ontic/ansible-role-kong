@@ -150,7 +150,7 @@ response:
   type: dic
 '''
 
-from ansible.module_utils.kong import KongServiceApi
+from ansible.module_utils.kong import KongUpstreamApi
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.urls import url_argument_spec
 
