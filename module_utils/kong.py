@@ -237,3 +237,17 @@ class KongPluginApi(KongApi):
 
     def list(self):
         return self.request_read('/plugins')
+
+class KongUpstreamApi(KongApi):
+
+    def create(self):
+        return self.request_create('/upstreams')
+
+    def delete(self):
+        return self.request_delete('/upstreams/{id}')
+
+    def find(self):
+        return self.request_read('/upstreams/{id}')
+
+    def list(self):
+        return self.request_read('/upstreams')

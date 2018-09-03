@@ -75,6 +75,11 @@
         name: 'key-auth'
         enabled: true
         action: 'create'
+    - name: 'Create a upstream'
+      kong_upstream:
+        id: 'example-upstream'
+        name: 'api.localhost.com'
+        action: 'create'
     - name: 'Ensure all endpoints are secured'
       uri:
         url: 'http://localhost:8000'
