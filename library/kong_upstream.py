@@ -33,11 +33,13 @@ options:
       - create
       - delete
       - find
+      - health
       - list
     description:
       - An action to perform. If `create` an upstream will be created or updated. If `delete` an
         upstream will be removed. If `find` the response will contain upstream information. If `list`
-        the response will contain a collection of upstreams and all their information.
+        the response will contain a collection of upstreams and all their information. If `health` the
+        response will contain information relating to the health of each target.
   id:
     required: false
     description:
@@ -109,6 +111,15 @@ EXAMPLES = '''
 
 - name: Debug upstream find
   debug: var=upstream_find
+
+- name: Health of upstream
+  kong_upstream:
+    id: example-upstream
+    action: health
+  register: upstream_health
+
+- name: Debug upstream health
+  debug: var=upstream_health
 
 - name: List all upstreams
   kong_upstream:
@@ -193,6 +204,8 @@ def main():
             result = api.required('id').delete()
         elif api.action == 'find':
             result = api.required('id').find()
+        elif api.action == 'health':
+            result = api.required('id').health()
         elif api.action == 'list':
             result = api.list()
     except ValueError, error:

@@ -262,5 +262,8 @@ class KongUpstreamApi(KongApi):
     def find(self):
         return self.request_read('/upstreams/{id}')
 
+    def health(self):
+        return self.request_read('/upstreams/{id}/health')
+
     def list(self):
         return self.request_read('/upstreams')
