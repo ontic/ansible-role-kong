@@ -305,6 +305,7 @@ class KongTargetApi(KongApi):
                 if data['target'] == self.data['target']:
                     result['failed'] = False
                     result['status'] = 200
+                    result['message'] = 'OK'
                     result['response'] = data
                     break
 
