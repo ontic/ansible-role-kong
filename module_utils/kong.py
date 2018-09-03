@@ -241,7 +241,20 @@ class KongPluginApi(KongApi):
 class KongUpstreamApi(KongApi):
 
     def create(self):
-        return self.request_create('/upstreams')
+        # We cannot use our typical request_create function as not all
+        # API end-points have been updated in Kong to support the PUT method.
+        exists = self.find()
+
+        if exists['status'] == 200:
+            result = self.request('/upstreams/{id}', 'PATCH', self.data)
+            result['changed'] = self.changed(exists['response'], result['response'])
+        else:
+            result = self.request('/upstreams', 'POST', self.data)
+            result['changed'] = result['status'] == 201
+
+        result['failed'] = result['status'] >= 400
+
+        return result
 
     def delete(self):
         return self.request_delete('/upstreams/{id}')

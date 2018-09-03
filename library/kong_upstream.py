@@ -95,7 +95,6 @@ EXAMPLES = '''
   kong_upstream:
     id: example-upstream
     name: api.localhost.com
-    created_at: 1534175051
     action: create
   register: upstream_create
 
@@ -174,7 +173,7 @@ def main():
         'healthchecks': dict(required=False, default=None, type='dict', include=True),
         'size': dict(required=False, default=None, type='int', include=True),
         'offset': dict(required=False, default=None, type='int', include=True),
-        'created_at': dict(required=False, default=None, type='int', include=True),
+        'created_at': dict(required=False, default=None, type='int', include=False),
         'updated_at': dict(required=False, default=None, type='int', include=False)
     }
 

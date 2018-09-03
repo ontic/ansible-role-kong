@@ -79,7 +79,6 @@
       kong_upstream:
         id: 'example-upstream'
         name: 'api.localhost.com'
-        created_at: 1534175051
         action: 'create'
     - name: 'Ensure all endpoints are secured'
       uri:
